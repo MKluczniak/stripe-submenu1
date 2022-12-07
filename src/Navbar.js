@@ -1,9 +1,57 @@
-import React from 'react'
-import logo from './images/logo.svg'
-import { FaBars } from 'react-icons/fa'
+import React from "react"
+import logo from "./images/logo.svg"
+import { FaBars } from "react-icons/fa"
+import { useGlobalContext } from "./context"
 
 const Navbar = () => {
-  return <h2>navbar component</h2>
+  const { openSidebar, openSubmenu, closeSubmenu } = useGlobalContext()
+  const displaySubmenu = (e) => {
+    console.log(e.target)
+    const page = e.target.textContent
+    const tempBtn = e.target.getBoundingClientRect()
+    const center = (tempBtn.left + tempBtn.right) / 2
+    const bottom = tempBtn.bottom - 3
+    openSubmenu(page, { center, bottom })
+  }
+  // if the e.target have the specific class we don't want to close the class  we do, simple but clever and important :P
+  const handleSubmenu = (e) => {
+    // console.log(e.target.classList.contains("link-btn"))
+    if (!e.target.classList.contains("link-btn")) {
+      closeSubmenu()
+    }
+  }
+
+  return (
+    <nav className="nav" onMouseOver={handleSubmenu}>
+      <div className="nav-center">
+        <div className="nav-header">
+          <img src={logo} className="nav-logo" alt="logo" />
+          <button className="btn toggle-btn" onClick={openSidebar}>
+            <FaBars />
+          </button>
+        </div>
+        <ul className="nav-links">
+          <li>
+            {/* those values inside of butttons must match what you have in the data linke our 'products' 'devalopers etc. in data.js  */}
+            <button className="link-btn" onMouseOver={displaySubmenu}>
+              products
+            </button>
+          </li>
+          <li>
+            <button className="link-btn" onMouseOver={displaySubmenu}>
+              developers
+            </button>
+          </li>
+          <li>
+            <button className="link-btn" onMouseOver={displaySubmenu}>
+              company
+            </button>
+          </li>
+        </ul>
+        <button className="btn signin-btn">sign in</button>
+      </div>
+    </nav>
+  )
 }
 
 export default Navbar
